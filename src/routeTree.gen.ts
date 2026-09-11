@@ -12,8 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioRouteImport } from './routes/_studio'
 import { Route as StudioDashboardRouteImport } from './routes/_studio.dashboard'
+import { Route as StudioLibraryRouteImport } from './routes/_studio.library'
+import { Route as StudioSettingsRouteImport } from './routes/_studio.settings'
+import { Route as StudioTemplatesRouteImport } from './routes/_studio.templates'
+import { Route as StudioEpisodesIndexRouteImport } from './routes/_studio.episodes.index'
+import { Route as StudioEpisodesEpisodeIdRouteImport } from './routes/_studio.episodes.$episodeId'
 import { Route as StudioProjectsIndexRouteImport } from './routes/_studio.projects.index'
 import { Route as StudioProjectsProjectIdRouteImport } from './routes/_studio.projects.$projectId'
+import { Route as StudioScenesSceneIdRouteImport } from './routes/_studio.scenes.$sceneId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -29,6 +35,31 @@ const StudioDashboardRoute = StudioDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => StudioRoute,
 } as any)
+const StudioLibraryRoute = StudioLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioSettingsRoute = StudioSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioTemplatesRoute = StudioTemplatesRouteImport.update({
+  id: '/templates',
+  path: '/templates',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioEpisodesIndexRoute = StudioEpisodesIndexRouteImport.update({
+  id: '/episodes/',
+  path: '/episodes/',
+  getParentRoute: () => StudioRoute,
+} as any)
+const StudioEpisodesEpisodeIdRoute = StudioEpisodesEpisodeIdRouteImport.update({
+  id: '/episodes/$episodeId',
+  path: '/episodes/$episodeId',
+  getParentRoute: () => StudioRoute,
+} as any)
 const StudioProjectsIndexRoute = StudioProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -39,17 +70,34 @@ const StudioProjectsProjectIdRoute = StudioProjectsProjectIdRouteImport.update({
   path: '/projects/$projectId',
   getParentRoute: () => StudioRoute,
 } as any)
+const StudioScenesSceneIdRoute = StudioScenesSceneIdRouteImport.update({
+  id: '/scenes/$sceneId',
+  path: '/scenes/$sceneId',
+  getParentRoute: () => StudioRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof StudioDashboardRoute
+  '/library': typeof StudioLibraryRoute
+  '/settings': typeof StudioSettingsRoute
+  '/templates': typeof StudioTemplatesRoute
+  '/episodes/$episodeId': typeof StudioEpisodesEpisodeIdRoute
   '/projects/$projectId': typeof StudioProjectsProjectIdRoute
+  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/episodes/': typeof StudioEpisodesIndexRoute
   '/projects/': typeof StudioProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof StudioDashboardRoute
+  '/library': typeof StudioLibraryRoute
+  '/settings': typeof StudioSettingsRoute
+  '/templates': typeof StudioTemplatesRoute
+  '/episodes/$episodeId': typeof StudioEpisodesEpisodeIdRoute
   '/projects/$projectId': typeof StudioProjectsProjectIdRoute
+  '/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/episodes': typeof StudioEpisodesIndexRoute
   '/projects': typeof StudioProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -57,20 +105,52 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_studio': typeof StudioRouteWithChildren
   '/_studio/dashboard': typeof StudioDashboardRoute
+  '/_studio/library': typeof StudioLibraryRoute
+  '/_studio/settings': typeof StudioSettingsRoute
+  '/_studio/templates': typeof StudioTemplatesRoute
+  '/_studio/episodes/$episodeId': typeof StudioEpisodesEpisodeIdRoute
   '/_studio/projects/$projectId': typeof StudioProjectsProjectIdRoute
+  '/_studio/scenes/$sceneId': typeof StudioScenesSceneIdRoute
+  '/_studio/episodes/': typeof StudioEpisodesIndexRoute
   '/_studio/projects/': typeof StudioProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/projects/$projectId' | '/projects/'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/library'
+    | '/settings'
+    | '/templates'
+    | '/episodes/$episodeId'
+    | '/projects/$projectId'
+    | '/scenes/$sceneId'
+    | '/episodes/'
+    | '/projects/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/projects/$projectId' | '/projects'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/library'
+    | '/settings'
+    | '/templates'
+    | '/episodes/$episodeId'
+    | '/projects/$projectId'
+    | '/scenes/$sceneId'
+    | '/episodes'
+    | '/projects'
   id:
     | '__root__'
     | '/'
     | '/_studio'
     | '/_studio/dashboard'
+    | '/_studio/library'
+    | '/_studio/settings'
+    | '/_studio/templates'
+    | '/_studio/episodes/$episodeId'
     | '/_studio/projects/$projectId'
+    | '/_studio/scenes/$sceneId'
+    | '/_studio/episodes/'
     | '/_studio/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -102,6 +182,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioDashboardRouteImport
       parentRoute: typeof StudioRoute
     }
+    '/_studio/library': {
+      id: '/_studio/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof StudioLibraryRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/settings': {
+      id: '/_studio/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof StudioSettingsRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/templates': {
+      id: '/_studio/templates'
+      path: '/templates'
+      fullPath: '/templates'
+      preLoaderRoute: typeof StudioTemplatesRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/episodes/': {
+      id: '/_studio/episodes/'
+      path: '/episodes'
+      fullPath: '/episodes/'
+      preLoaderRoute: typeof StudioEpisodesIndexRouteImport
+      parentRoute: typeof StudioRoute
+    }
+    '/_studio/episodes/$episodeId': {
+      id: '/_studio/episodes/$episodeId'
+      path: '/episodes/$episodeId'
+      fullPath: '/episodes/$episodeId'
+      preLoaderRoute: typeof StudioEpisodesEpisodeIdRouteImport
+      parentRoute: typeof StudioRoute
+    }
     '/_studio/projects/': {
       id: '/_studio/projects/'
       path: '/projects'
@@ -116,18 +231,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudioProjectsProjectIdRouteImport
       parentRoute: typeof StudioRoute
     }
+    '/_studio/scenes/$sceneId': {
+      id: '/_studio/scenes/$sceneId'
+      path: '/scenes/$sceneId'
+      fullPath: '/scenes/$sceneId'
+      preLoaderRoute: typeof StudioScenesSceneIdRouteImport
+      parentRoute: typeof StudioRoute
+    }
   }
 }
 
 interface StudioRouteChildren {
   StudioDashboardRoute: typeof StudioDashboardRoute
+  StudioLibraryRoute: typeof StudioLibraryRoute
+  StudioSettingsRoute: typeof StudioSettingsRoute
+  StudioTemplatesRoute: typeof StudioTemplatesRoute
+  StudioEpisodesEpisodeIdRoute: typeof StudioEpisodesEpisodeIdRoute
   StudioProjectsProjectIdRoute: typeof StudioProjectsProjectIdRoute
+  StudioScenesSceneIdRoute: typeof StudioScenesSceneIdRoute
+  StudioEpisodesIndexRoute: typeof StudioEpisodesIndexRoute
   StudioProjectsIndexRoute: typeof StudioProjectsIndexRoute
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
   StudioDashboardRoute: StudioDashboardRoute,
+  StudioLibraryRoute: StudioLibraryRoute,
+  StudioSettingsRoute: StudioSettingsRoute,
+  StudioTemplatesRoute: StudioTemplatesRoute,
+  StudioEpisodesEpisodeIdRoute: StudioEpisodesEpisodeIdRoute,
   StudioProjectsProjectIdRoute: StudioProjectsProjectIdRoute,
+  StudioScenesSceneIdRoute: StudioScenesSceneIdRoute,
+  StudioEpisodesIndexRoute: StudioEpisodesIndexRoute,
   StudioProjectsIndexRoute: StudioProjectsIndexRoute,
 }
 
