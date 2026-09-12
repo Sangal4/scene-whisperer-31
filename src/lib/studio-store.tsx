@@ -194,7 +194,7 @@ export function StudioProvider({ children }: { children: ReactNode }) {
             steps,
             phase: "generating",
             progress: 6,
-            stageLabel: STAGES[0],
+            stageLabel: STAGES[0] ?? "Planning the scene",
             activity: [...base.activity, { time: clock(), text: "Received new direction" }],
           },
         };
@@ -219,9 +219,12 @@ export function StudioProvider({ children }: { children: ReactNode }) {
                   ...base,
                   steps: next,
                   progress: Math.round(((i + 1) / steps.length) * 100),
-                  stageLabel: STAGES[Math.min(i, STAGES.length - 1)],
+                  stageLabel: STAGES[Math.min(i, STAGES.length - 1)] ?? "Rendering preview",
                   messages: base.messages.map((m) => (m.steps ? { ...m, steps: next } : m)),
-                  activity: [...base.activity, { time: clock(), text: steps[i].label }],
+                  activity: [
+                    ...base.activity,
+                    { time: clock(), text: steps[i]?.label ?? "Working" },
+                  ],
                 },
               };
             });

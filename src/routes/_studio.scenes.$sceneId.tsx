@@ -369,7 +369,7 @@ function SceneViewer({ sceneId }: { sceneId: string }) {
           </span>
           <Slider
             value={[pos]}
-            onValueChange={([v]) => setPos(v)}
+            onValueChange={([v]) => setPos(v ?? 0)}
             max={100}
             step={1}
             className="mx-2 flex-1"

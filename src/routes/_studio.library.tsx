@@ -21,7 +21,7 @@ const tabs: { id: Tab; label: string; kind?: AssetKind }[] = [
 
 export const Route = createFileRoute("/_studio/library")({
   validateSearch: (search: Record<string, unknown>): { tab?: Tab } => {
-    const tab = search.tab as Tab | undefined;
+    const tab = search["tab"] as Tab | undefined;
     return tab && tabs.some((t) => t.id === tab) ? { tab } : {};
   },
   head: () => ({
