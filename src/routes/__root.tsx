@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { StudioProvider } from "../lib/studio-store";
+import { AuthProvider } from "../hooks/use-auth";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -125,11 +126,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StudioProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
-        <Toaster position="bottom-right" />
-      </StudioProvider>
+      <AuthProvider>
+        <StudioProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <Toaster position="bottom-right" />
+        </StudioProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Boxes,
   Clapperboard,
@@ -9,9 +10,12 @@ import {
   LogOut,
   Mic,
   Settings,
+  Shield,
   Sparkle,
   User,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +24,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useStudio } from "@/lib/studio-store";
 
 export const Route = createFileRoute("/_studio")({
+  ssr: false,
+  beforeLoad: async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw redirect({ to: "/" });
+  },
   component: StudioLayout,
 });
 
@@ -45,8 +53,16 @@ const navBottom = [
 ] as const;
 
 function StudioLayout() {
-  const { user, signOut } = useStudio();
+  const { displayName, initials, profile, user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await signOut();
+    navigate({ to: "/", replace: true });
+  };
 
   const itemClass =
     "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground";
@@ -103,32 +119,47 @@ function StudioLayout() {
                 {label}
               </Link>
             ))}
+            {isAdmin ? (
+              <Link
+                to="/admin"
+                className={itemClass}
+                activeProps={{ className: `${itemClass} ${activeClass}` }}
+              >
+                <Shield className="size-4" />
+                Admin
+              </Link>
+            ) : null}
           </div>
         </nav>
 
         <div className="border-t border-sidebar-border p-3">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-sidebar-accent">
-              <span className="grid size-8 place-items-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
-                {user.initials}
-              </span>
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt=""
+                  className="size-8 rounded-full object-cover"
+                />
+              ) : (
+                <span className="grid size-8 place-items-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
+                  {initials}
+                </span>
+              )}
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm">{user.name}</span>
-                <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
+                <span className="block truncate text-sm">{displayName}</span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {profile?.email ?? user?.email}
+                </span>
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-52">
-              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{isAdmin ? "Admin account" : "Creator account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>
                 <Settings className="size-4" /> Settings
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  signOut();
-                  navigate({ to: "/" });
-                }}
-              >
+              <DropdownMenuItem onClick={handleSignOut}>
                 <LogOut className="size-4" /> Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
