@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StudioRouteImport } from './routes/_studio'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as StudioAdminRouteImport } from './routes/_studio.admin'
 import { Route as StudioDashboardRouteImport } from './routes/_studio.dashboard'
 import { Route as StudioLibraryRouteImport } from './routes/_studio.library'
 import { Route as StudioSettingsRouteImport } from './routes/_studio.settings'
@@ -35,6 +36,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const StudioAdminRoute = StudioAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => StudioRoute,
 } as any)
 const StudioDashboardRoute = StudioDashboardRouteImport.update({
   id: '/dashboard',
@@ -85,6 +91,7 @@ const StudioScenesSceneIdRoute = StudioScenesSceneIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof StudioAdminRoute
   '/dashboard': typeof StudioDashboardRoute
   '/library': typeof StudioLibraryRoute
   '/settings': typeof StudioSettingsRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof StudioAdminRoute
   '/dashboard': typeof StudioDashboardRoute
   '/library': typeof StudioLibraryRoute
   '/settings': typeof StudioSettingsRoute
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_studio': typeof StudioRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/_studio/admin': typeof StudioAdminRoute
   '/_studio/dashboard': typeof StudioDashboardRoute
   '/_studio/library': typeof StudioLibraryRoute
   '/_studio/settings': typeof StudioSettingsRoute
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/reset-password'
+    | '/admin'
     | '/dashboard'
     | '/library'
     | '/settings'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/reset-password'
+    | '/admin'
     | '/dashboard'
     | '/library'
     | '/settings'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_studio'
     | '/reset-password'
+    | '/_studio/admin'
     | '/_studio/dashboard'
     | '/_studio/library'
     | '/_studio/settings'
@@ -194,6 +206,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_studio/admin': {
+      id: '/_studio/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof StudioAdminRouteImport
+      parentRoute: typeof StudioRoute
     }
     '/_studio/dashboard': {
       id: '/_studio/dashboard'
@@ -262,6 +281,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface StudioRouteChildren {
+  StudioAdminRoute: typeof StudioAdminRoute
   StudioDashboardRoute: typeof StudioDashboardRoute
   StudioLibraryRoute: typeof StudioLibraryRoute
   StudioSettingsRoute: typeof StudioSettingsRoute
@@ -274,6 +294,7 @@ interface StudioRouteChildren {
 }
 
 const StudioRouteChildren: StudioRouteChildren = {
+  StudioAdminRoute: StudioAdminRoute,
   StudioDashboardRoute: StudioDashboardRoute,
   StudioLibraryRoute: StudioLibraryRoute,
   StudioSettingsRoute: StudioSettingsRoute,
