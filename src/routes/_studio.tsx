@@ -136,26 +136,31 @@ function StudioLayout() {
         <div className="border-t border-sidebar-border p-3">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-sidebar-accent">
-              <span className="grid size-8 place-items-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
-                {user.initials}
-              </span>
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt=""
+                  className="size-8 rounded-full object-cover"
+                />
+              ) : (
+                <span className="grid size-8 place-items-center rounded-full bg-primary/20 text-xs font-semibold text-primary">
+                  {initials}
+                </span>
+              )}
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm">{user.name}</span>
-                <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
+                <span className="block truncate text-sm">{displayName}</span>
+                <span className="block truncate text-xs text-muted-foreground">
+                  {profile?.email ?? user?.email}
+                </span>
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-52">
-              <DropdownMenuLabel>Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{isAdmin ? "Admin account" : "Creator account"}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate({ to: "/settings" })}>
                 <Settings className="size-4" /> Settings
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => {
-                  signOut();
-                  navigate({ to: "/" });
-                }}
-              >
+              <DropdownMenuItem onClick={handleSignOut}>
                 <LogOut className="size-4" /> Sign out
               </DropdownMenuItem>
             </DropdownMenuContent>
