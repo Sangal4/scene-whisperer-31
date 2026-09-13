@@ -120,6 +120,16 @@ function StudioLayout() {
                 {label}
               </Link>
             ))}
+            {isAdmin ? (
+              <Link
+                to="/admin"
+                className={itemClass}
+                activeProps={{ className: `${itemClass} ${activeClass}` }}
+              >
+                <Shield className="size-4" />
+                Admin
+              </Link>
+            ) : null}
           </div>
         </nav>
 
