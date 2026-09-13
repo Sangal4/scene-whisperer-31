@@ -27,6 +27,11 @@ import {
 import { useStudio } from "@/lib/studio-store";
 
 export const Route = createFileRoute("/_studio")({
+  ssr: false,
+  beforeLoad: async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) throw redirect({ to: "/" });
+  },
   component: StudioLayout,
 });
 
@@ -49,8 +54,16 @@ const navBottom = [
 ] as const;
 
 function StudioLayout() {
-  const { user, signOut } = useStudio();
+  const { displayName, initials, profile, user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    await signOut();
+    navigate({ to: "/", replace: true });
+  };
 
   const itemClass =
     "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground";
