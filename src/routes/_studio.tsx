@@ -24,7 +24,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useStudio } from "@/lib/studio-store";
 
 export const Route = createFileRoute("/_studio")({
   ssr: false,
